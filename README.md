@@ -1,5 +1,3 @@
-src/pages/index.html
-
 # Luxury Black Car Service
 
 ## Overview

@@ -36,12 +36,9 @@ a:hover {
 }
 
 .header .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
-    color: white;
-    display: flex;
-    align-items: center;
+    color: #1A3A28;
 }
 
 .nav-menu {
@@ -225,9 +222,10 @@ a:hover {
 }
 
 .booking-form {
-    background: transparent;
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(10px);
     padding: 30px;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
 }
 
 .footer {
@@ -315,28 +313,12 @@ a:hover {
 }
 
 .price-display {
-    background: rgba(10, 10, 10, 0.8);
-    padding: 0.5rem;
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
     margin: 1rem 0;
     border-radius: 4px;
     text-align: center;
-    font-size: 1rem;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
 }
-
-.price-display p {
-    margin: 0;
-    padding: 0;
-}
-
-.price-display span {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: var(--dark-green);
-}
-
 
 .car-quantity-controls {
     display: flex;

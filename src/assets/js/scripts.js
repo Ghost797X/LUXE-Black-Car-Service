@@ -36,45 +36,72 @@ document.addEventListener("DOMContentLoaded", function() {
     const dropoffInput = document.getElementById('dropoff');
     const priceDisplay = document.getElementById('price');
     let distanceMiles = 0;
+    const geocodeCache = new Map(); // Cache to store geocoding results
 
     async function getCoordinates(address) {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+        if (geocodeCache.has(address)) {
+            return geocodeCache.get(address); // Return cached result if available
+        }
+
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=us,ca&limit=4`);
         const data = await response.json();
-        return data[0] ? {
+        const coordinates = data[0] ? {
             lat: data[0].lat,
             lon: data[0].lon,
-            display_name: data[0].display_name
+            display_name: data[0].display_name,
+            suggestions: data // Store full suggestions in cache
         } : null;
+
+        geocodeCache.set(address, coordinates); // Store result in cache
+        return coordinates;
     }
 
     function showAutocompleteSuggestions(inputElement, suggestions) {
         const container = inputElement.parentElement.querySelector('.autocomplete-items');
         container.innerHTML = '';
-        suggestions.forEach(item => {
-            const div = document.createElement('div');
-            div.textContent = item.display_name;
-            div.addEventListener('click', () => {
-                inputElement.value = item.display_name;
-                container.innerHTML = '';
-                calculatePrice();
+        if (suggestions) { // Check if suggestions are available
+            suggestions.slice(0, 4).forEach(item => { // Use cached suggestions
+                const div = document.createElement('div');
+                div.textContent = item.display_name;
+                div.addEventListener('click', () => {
+                    inputElement.value = item.display_name;
+                    container.innerHTML = '';
+                    calculatePrice();
+                });
+                container.appendChild(div);
             });
-            container.appendChild(div);
-        });
+        }
     }
+
+    const autocompleteCache = new Map(); // Cache for autocomplete suggestions
 
     function setupAutocomplete(inputElement) {
         let currentTimeout;
-        
+
         inputElement.addEventListener('input', async (e) => {
             clearTimeout(currentTimeout);
             currentTimeout = setTimeout(async () => {
-                if (inputElement.value.length > 2) {
-                    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=us,ca&q=${encodeURIComponent(inputElement.value)}`);
-                    const data = await response.json();
-                    showAutocompleteSuggestions(inputElement, data.slice(0, 4));
+                const address = inputElement.value;
+                if (address.length > 2) {
+                    if (autocompleteCache.has(address)) {
+                        showAutocompleteSuggestions(inputElement, autocompleteCache.get(address));
+                    } else {
+                        try {
+                            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=us,ca&q=${encodeURIComponent(address)}&limit=4`);
+                            const data = await response.json();
+                            autocompleteCache.set(address, data);
+                            showAutocompleteSuggestions(inputElement, data);
+                        } catch (error) {
+                            console.error('Autocomplete fetch error:', error);
+                            showAutocompleteSuggestions(inputElement, []); // Show no suggestions on error
+                        }
+                    }
+                } else {
+                    showAutocompleteSuggestions(inputElement, []); // Clear suggestions if input is too short
                 }
-            }, 300);
+            }, 500);
         });
+
 
         document.addEventListener('click', (e) => {
             if (!inputElement.contains(e.target)) {
