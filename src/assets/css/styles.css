@@ -112,9 +112,8 @@ a:hover {
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
+    text-align: center;
 }
 
 .hero .cta-button::after {
@@ -345,7 +344,7 @@ a:hover {
 
 .btn {
     background: var(--accent-green);
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     padding: 1.2rem 2.5rem;
     font-size: 1.1rem;
@@ -354,6 +353,10 @@ a:hover {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 1rem;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .btn:hover {
