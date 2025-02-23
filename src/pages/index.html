@@ -20,6 +20,7 @@
 <body>
     <header>
         <!-- Include header component -->
+        <!-- Include header component -->
         <div id="header-placeholder"></div>
     </header>
 
@@ -45,19 +46,10 @@
                         <div class="autocomplete-items"></div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="carQuantity">Number of Vehicles</label>
-                    <div class="car-quantity-controls">
-                        <button type="button" id="decreaseCarQuantity">-</button>
-                        <span id="carQuantityDisplay">1</span>
-                        <button type="button" id="increaseCarQuantity">+</button>
-                    </div>
-                    <input type="hidden" id="carQuantity" value="1">
+                <button type="submit" class="btn ripple" style="margin-top: 2rem;">Reserve Now</button>
+                <div class="price-display" style="background: transparent; margin-top: 2rem;">
+                    <p style="color: white;">Estimated Price: <span id="price" style="color: var(--dark-green);">$0.00</span></p>
                 </div>
-                <div class="price-display">
-                    <p>Estimated Price: <span id="price">$0.00</span></p>
-                </div>
-                <button type="submit" class="btn ripple">Reserve Now</button>
             </form>
         </div>
     </section>
@@ -94,10 +86,35 @@
 
     <footer>
         <!-- Include footer component -->
+        <!-- Include footer component -->
         <div id="footer-placeholder"></div>
     </footer>
 
     <script src="../assets/js/scripts.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../components/header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header-placeholder').innerHTML = data;
+                });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../components/header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header-placeholder').innerHTML = data;
+                });
+
+            fetch('../components/footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-placeholder').innerHTML = data;
+                });
+        });
+    </script>
 </body>
 </html>

@@ -36,9 +36,12 @@ a:hover {
 }
 
 .header .logo {
-    font-size: 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
     font-weight: bold;
-    color: #1A3A28;
+    color: white;
+    display: flex;
+    align-items: center;
 }
 
 .nav-menu {
@@ -222,10 +225,9 @@ a:hover {
 }
 
 .booking-form {
-    background: rgba(10, 10, 10, 0.8);
-    backdrop-filter: blur(10px);
+    background: transparent;
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
 }
 
 .footer {
@@ -313,12 +315,28 @@ a:hover {
 }
 
 .price-display {
-    background: rgba(0,0,0,0.3);
-    padding: 1rem;
+    background: rgba(10, 10, 10, 0.8);
+    padding: 0.5rem;
     margin: 1rem 0;
     border-radius: 4px;
     text-align: center;
+    font-size: 1rem;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
+
+.price-display p {
+    margin: 0;
+    padding: 0;
+}
+
+.price-display span {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--dark-green);
+}
+
 
 .car-quantity-controls {
     display: flex;
@@ -344,10 +362,10 @@ a:hover {
 
 .btn {
     background: var(--accent-green);
-    color: rgb(0, 0, 0);
+    color: white;
     border: none;
-    padding: 1.2rem 2.5rem;
-    font-size: 1.1rem;
+    padding: 0.84rem 1.75rem;
+    font-size: 0.77rem;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -357,6 +375,7 @@ a:hover {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 50px;
 }
 
 .btn:hover {

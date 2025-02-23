@@ -35,8 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const pickupInput = document.getElementById('pickup');
     const dropoffInput = document.getElementById('dropoff');
     const priceDisplay = document.getElementById('price');
-    const carQuantityInput = document.getElementById('carQuantity');
-    const carQuantityDisplay = document.getElementById('carQuantityDisplay');
     let distanceMiles = 0;
 
     async function getCoordinates(address) {
@@ -90,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function() {
     setupAutocomplete(dropoffInput);
 
     async function calculatePrice() {
-        const cars = parseInt(carQuantityInput.value);
         const ratePerMile = 2.50;
         const basePrice = 20.00;
         const ratePerMinute = 1.20;
@@ -108,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (routeData.routes.length > 0) {
                     const distanceMiles = routeData.routes[0].distance / 1609.34;
                     const durationMinutes = routeData.routes[0].duration / 60;
-                    const total = (basePrice + (distanceMiles * ratePerMile) + (durationMinutes * ratePerMinute) * cars).toFixed(2);
+                    const total = (basePrice + (distanceMiles * ratePerMile) + (durationMinutes * ratePerMinute)).toFixed(2);
                     priceDisplay.textContent = `$${total}`;
                 }
             }
@@ -132,23 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
     pickupInput.addEventListener('input', debouncedCalculatePrice);
     dropoffInput.addEventListener('input', debouncedCalculatePrice);
 
-    document.getElementById('decreaseCarQuantity').addEventListener('click', () => {
-        let current = parseInt(carQuantityInput.value);
-        if (current > 1) {
-            carQuantityInput.value = --current;
-            carQuantityDisplay.textContent = current;
-            calculatePrice();
-        }
-    });
-
-    document.getElementById('increaseCarQuantity').addEventListener('click', () => {
-        let current = parseInt(carQuantityInput.value);
-        if (current < 3) {
-            carQuantityInput.value = ++current;
-            carQuantityDisplay.textContent = current;
-            calculatePrice();
-        }
-    });
 
     bookingForm.addEventListener('submit', (e) => {
         e.preventDefault();
