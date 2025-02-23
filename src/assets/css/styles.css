@@ -3,11 +3,18 @@ body {
     font-family: 'Inter', sans-serif;
     background-color: #0A0A0A;
     color: #E5E5E5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
     margin: 0;
+    background: rgba(10, 10, 10, 0.7);
+    padding: 15px;
+    border-radius: 8px;
+    display: inline-block;
 }
 
 a {
@@ -48,6 +55,40 @@ a:hover {
     position: relative;
     height: 100vh;
     overflow: hidden;
+    background-image: url('../../cadillac.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+    animation: fadeIn 2s ease-in-out;
+    border-bottom: none;
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.booking {
+    border-top: none;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    background: rgba(10, 10, 10, 0.9);
+    padding: 2rem 4rem;
+    border: 2px solid #D4AF37;
+    text-transform: uppercase;
+    letter-spacing: 4px;
 }
 
 .hero video, .hero img {
@@ -61,20 +102,47 @@ a:hover {
     bottom: 20%;
     left: 50%;
     transform: translateX(-50%);
-    padding: 15px 30px;
-    background-color: #1A3A28;
+    padding: 18px 36px;
+    background: linear-gradient(145deg, #1A3A28 0%, #0A0A0A 100%);
     color: #E5E5E5;
-    border: none;
-    border-radius: 5px;
-    font-size: 18px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    font-size: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero .cta-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255,255,255,0.15),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
 }
 
 .hero .cta-button:hover {
-    background-color: #E5E5E5;
-    color: #1A3A28;
-    transform: scale(1.05);
+    transform: translateX(-50%) scale(1.08);
+    color: #D4AF37;
+}
+
+.hero .cta-button:hover::after {
+    left: 150%;
+    transition-delay: 0.1s;
 }
 
 .services {
@@ -87,17 +155,22 @@ a:hover {
 .service-card {
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transform: translateZ(0);
 }
 
 .service-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.05) translateZ(0);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
 
 .service-card img {
     width: 100%;
-    border-radius: 10px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
 }
 
 .service-card .overlay {
@@ -106,17 +179,47 @@ a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(26, 58, 40, 0.8);
+    background: linear-gradient(180deg, rgba(26, 58, 40, 0) 0%, rgba(10, 10, 10, 0.9) 100%);
     color: #E5E5E5;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    padding: 2rem;
+    opacity: 1;
+    transition: all 0.4s ease;
 }
 
-.service-card:hover .overlay {
+.service-card .overlay p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    text-align: center;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.service-card .overlay p::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: #D4AF37;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.service-card:hover .overlay p {
+    transform: translateY(0);
     opacity: 1;
+}
+
+.service-card:hover .overlay p::after {
+    opacity: 1;
+    bottom: -15px;
 }
 
 .booking-form {
@@ -256,4 +359,13 @@ a:hover {
 .btn:hover {
     background: var(--gold);
     transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .book-now-section {
+        height: 50vh;
+        background-position: center 40%;
+        margin-top: 60px;
+        padding: 60px 20px;
+    }
 }

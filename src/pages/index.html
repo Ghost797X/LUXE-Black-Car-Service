@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxury Black Car Service</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="preload" href="../assets/fonts/your-font-file.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,46 +23,12 @@
         <div id="header-placeholder"></div>
     </header>
 
-    <section class="hero">
+    <section class="hero" style="margin-bottom: 0;">
         <div class="hero-content">
-            <h1>Experience Luxury on the Road</h1>
             <a href="#booking" class="cta-button">Book Now</a>
         </div>
     </section>
-
-    <section class="services">
-        <h2>Our Services</h2>
-        <div class="service-grid">
-            <div class="service-item">
-                <img src="../images/service1.jpg" alt="Service 1">
-                <div class="overlay">
-                    <p>24/7 Concierge</p>
-                </div>
-            </div>
-            <div class="service-item">
-                <img src="../images/service2.jpg" alt="Service 2">
-                <div class="overlay">
-                    <p>Privacy Tinting</p>
-                </div>
-            </div>
-            <div class="service-item">
-                <img src="../images/service3.jpg" alt="Service 3">
-                <div class="overlay">
-                    <p>Premium Amenities</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="testimonials">
-        <h2>What Our Clients Say</h2>
-        <div class="testimonial-carousel">
-            <!-- Testimonials will be dynamically loaded here -->
-        </div>
-    </section>
-
-    <section id="booking" class="booking">
-        <h2>Reserve Your Ride</h2>
+    <section id="booking" class="booking book-now-section">
         <div class="booking-form animate">
             <form id="bookingForm">
                 <div class="form-group">
@@ -85,6 +61,36 @@
             </form>
         </div>
     </section>
+    <section class="services">
+        <h2>Our Services</h2>
+        <div class="service-grid">
+            <div class="service-item">
+                <img src="../images/service1.jpg" alt="Service 1">
+                <div class="overlay">
+                    <p>24/7 Concierge</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <img src="../images/service2.jpg" alt="Service 2">
+                <div class="overlay">
+                    <p>Privacy Tinting</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <img src="../images/service3.jpg" alt="Service 3">
+                <div class="overlay">
+                    <p>Premium Amenities</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>What Our Clients Say</h2>
+        <div class="testimonial-carousel">
+            <!-- Testimonials will be dynamically loaded here -->
+        </div>
+    </section>
 
     <footer>
         <!-- Include footer component -->
@@ -92,5 +98,6 @@
     </footer>
 
     <script src="../assets/js/scripts.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </body>
 </html>
