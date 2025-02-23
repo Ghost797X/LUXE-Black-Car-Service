@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Black Car Service</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preload" href="../assets/fonts/your-font-file.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <!-- Include header component -->
+        <div id="header-placeholder"></div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Experience Luxury on the Road</h1>
+            <a href="#booking" class="cta-button">Book Now</a>
+        </div>
+    </section>
+
+    <section class="services">
+        <h2>Our Services</h2>
+        <div class="service-grid">
+            <div class="service-item">
+                <img src="../images/service1.jpg" alt="Service 1">
+                <div class="overlay">
+                    <p>24/7 Concierge</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <img src="../images/service2.jpg" alt="Service 2">
+                <div class="overlay">
+                    <p>Privacy Tinting</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <img src="../images/service3.jpg" alt="Service 3">
+                <div class="overlay">
+                    <p>Premium Amenities</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>What Our Clients Say</h2>
+        <div class="testimonial-carousel">
+            <!-- Testimonials will be dynamically loaded here -->
+        </div>
+    </section>
+
+    <section id="booking" class="booking">
+        <h2>Reserve Your Ride</h2>
+        <div class="booking-form animate">
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="pickup">Pick-up Location</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="pickup" class="address-input" placeholder="Start typing address..." required autocomplete="off">
+                        <div class="autocomplete-items"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dropoff">Drop-off Location</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="dropoff" class="address-input" placeholder="Start typing address..." required autocomplete="off">
+                        <div class="autocomplete-items"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="carQuantity">Number of Vehicles</label>
+                    <div class="car-quantity-controls">
+                        <button type="button" id="decreaseCarQuantity">-</button>
+                        <span id="carQuantityDisplay">1</span>
+                        <button type="button" id="increaseCarQuantity">+</button>
+                    </div>
+                    <input type="hidden" id="carQuantity" value="1">
+                </div>
+                <div class="price-display">
+                    <p>Estimated Price: <span id="price">$0.00</span></p>
+                </div>
+                <button type="submit" class="btn ripple">Reserve Now</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <!-- Include footer component -->
+        <div id="footer-placeholder"></div>
+    </footer>
+
+    <script src="../assets/js/scripts.js"></script>
+</body>
+</html>

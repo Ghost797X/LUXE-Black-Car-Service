@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Calculator</title>
+    <style>
+        :root {
+            --black: #0A0A0A;
+            --dark-green: #1A3B35;
+            --accent-green: #2C5548;
+            --gold: #D4AF37;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: black;
+            color: white;
+            line-height: 1.6;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            background: black;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 3rem auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .booking-form form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .address-input, .address-input:focus, .address-input:-webkit-autofill {
+            width: 100%;
+            padding: 1rem;
+            background-color: black !important;
+            border: 1px solid var(--accent-green);
+            color: white !important;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .address-input::placeholder {
+            color: white !important;
+            opacity: 0.8;
+        }
+
+        .address-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        /* Autocomplete styles */
+        .autocomplete-container {
+            position: relative;
+        }
+        
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid var(--accent-green);
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: black;
+        }
+        
+        .autocomplete-items div {
+            padding: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .autocomplete-items div:hover {
+            background: var(--dark-green);
+        }
+
+        .btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .price-display {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .car-quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .car-quantity-controls button {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .car-quantity-controls button:hover {
+            background: var(--gold);
+        }
+
+        .car-quantity-controls span {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-form animate">
+        <form id="bookingForm">
+            <div class="form-group">
+                <label for="pickup">Pick-up Location</label>
+                <div class="autocomplete-container">
+                    <input type="text" id="pickup" class="address-input" placeholder="Start typing address..." required autocomplete="off">
+                    <div class="autocomplete-items"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dropoff">Drop-off Location</label>
+                <div class="autocomplete-container">
+                    <input type="text" id="dropoff" class="address-input" placeholder="Start typing address..." required autocomplete="off">
+                    <div class="autocomplete-items"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="carQuantity">Number of Vehicles</label>
+                <div class="car-quantity-controls">
+                    <button type="button" id="decreaseCarQuantity">-</button>
+                    <span id="carQuantityDisplay">1</span>
+                    <button type="button" id="increaseCarQuantity">+</button>
+                </div>
+                <input type="hidden" id="carQuantity" value="1">
+            </div>
+            <div class="price-display">
+                <p>Estimated Price: <span id="price">$0.00</span></p>
+            </div>
+            <button type="submit" class="btn ripple">Reserve Now</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialize OpenStreetMap Geocoding
+        const pickupInput = document.getElementById('pickup');
+        const dropoffInput = document.getElementById('dropoff');
+        const priceDisplay = document.getElementById('price');
+        const form = document.getElementById('bookingForm');
+        const carQuantityInput = document.getElementById('carQuantity');
+        const carQuantityDisplay = document.getElementById('carQuantityDisplay');
+        const decreaseCarQuantityButton = document.getElementById('decreaseCarQuantity');
+        const increaseCarQuantityButton = document.getElementById('increaseCarQuantity');
+        let distanceMiles = 0;
+
+        async function getCoordinates(address) {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+            const data = await response.json();
+            if (data.length > 0) {
+                return {
+                    lat: data[0].lat,
+                    lon: data[0].lon,
+                    display_name: data[0].display_name
+                };
+            } else {
+                throw new Error('Address not found');
+            }
+        }
+
+        // Autocomplete functionality
+        function autocomplete(inp) {
+            let currentFocus;
+
+            async function fetchSuggestions(val) {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(val)}&addressdetails=1`);
+                const data = await response.json();
+                return data.map(item => ({
+                    display: item.display_name,
+                    city: item.address.city || item.address.town || item.address.village || '',
+                    state: item.address.state || ''
+                }));
+            }
+
+            inp.addEventListener('input', debounce(async function(e) {
+                const val = this.value;
+                closeAllLists();
+                if (!val) return;
+
+                const items = await fetchSuggestions(val);
+                const container = this.parentNode.querySelector('.autocomplete-items');
+                container.innerHTML = '';
+
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `${item.display}`;
+                    div.addEventListener('click', function() {
+                        inp.value = item.display;
+                        closeAllLists();
+                    });
+                    container.appendChild(div);
+                });
+            }, 300));
+
+            function closeAllLists() {
+                const items = document.querySelectorAll('.autocomplete-items');
+                items.forEach(item => item.innerHTML = '');
+            }
+        }
+
+        async function calculatePrice() {
+            const cars = parseInt(carQuantityInput.value);
+            const ratePerMile = 2.50;
+            const basePrice = 20.00;
+            const ratePerMinute = 1.20;
+
+            if (!pickupInput.value || !dropoffInput.value) return;
+
+            try {
+                const pickupCoords = await getCoordinates(pickupInput.value);
+                const dropoffCoords = await getCoordinates(dropoffInput.value);
+
+                const response = await fetch(`http://router.project-osrm.org/route/v1/driving/${pickupCoords.lon},${pickupCoords.lat};${dropoffCoords.lon},${dropoffCoords.lat}?overview=false`);
+                const data = await response.json();
+
+                if (data.routes.length > 0) {
+                    distanceMiles = data.routes[0].distance / 1609.34; // Convert meters to miles
+                    const durationMinutes = data.routes[0].duration / 60; // Convert seconds to minutes
+                    const totalForOneCar = basePrice + (distanceMiles * ratePerMile) + (durationMinutes * ratePerMinute);
+                    const total = (totalForOneCar * cars).toFixed(2);
+                    priceDisplay.textContent = `$${total}`;
+                } else {
+                    throw new Error('Route not found');
+                }
+
+            } catch (error) {
+                console.error('Error calculating distance:', error);
+                priceDisplay.textContent = '$0.00';
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Event listeners
+        const debouncedCalculatePrice = debounce(calculatePrice, 300);
+        pickupInput.addEventListener('input', debouncedCalculatePrice);
+        dropoffInput.addEventListener('input', debouncedCalculatePrice);
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Show confirmation modal
+            alert('Booking confirmed - check your email for details');
+        });
+
+        decreaseCarQuantityButton.addEventListener('click', () => {
+            let currentQuantity = parseInt(carQuantityInput.value);
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                carQuantityInput.value = currentQuantity;
+                carQuantityDisplay.textContent = currentQuantity;
+                calculatePrice();
+            }
+        });
+
+        increaseCarQuantityButton.addEventListener('click', () => {
+            let currentQuantity = parseInt(carQuantityInput.value);
+            if (currentQuantity < 3) {
+                currentQuantity++;
+                carQuantityInput.value = currentQuantity;
+                carQuantityDisplay.textContent = currentQuantity;
+                calculatePrice();
+            }
+        });
+
+        // Initial calculation
+        calculatePrice();
+
+        // Initialize autocomplete
+        autocomplete(pickupInput);
+        autocomplete(dropoffInput);
+    </script>
+</body>
+</html>
